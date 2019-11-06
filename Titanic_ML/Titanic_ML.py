@@ -20,6 +20,9 @@ from sklearn.externals import joblib
 ################################################
 def explore_data(inpath=["None.csv"]):
     # Explore the data for null values and outliers
+    # This part could and probably should be done in a Juypter notebook.
+    # By doing this part in a Jupyter notebook we can enable the research
+    # results to be saved.
 
     # Pull Data
     if inpath[0] == "None.csv": return # stop script if no file specified
@@ -31,8 +34,27 @@ def explore_data(inpath=["None.csv"]):
         print(df.head()) # show the head of each data set
         print("Tail")
         print(df.tail()) # show the tail of each data set
+        sns.heatmap(df.isnull(), cbar=False).set_title(path) # Show the null values
+        #plt.show()
+
+        print(df.columns)
+
+        # Print out survival percentage by column
+        for col in df.columns:
+            print(df[[col, 'Survived']].groupby('Survived').describe()) if col != 'Survived' else print("Bump!",)
+
+        # Some Notes:
+        # Females are more likely to survive
+        # Survivors generally paid more for their ticket
+        # Male are more likely to die
+        # 1st class was more likely to survive
+        # Age is missing data
+        # Survivors generally had less siblings
+        # A passenger is more likely to die than to survive 3/8ths suvival give or take -> more 0's than 1's
+
 
 explore_data(inpath = [os.path.join('Raw Data', path) for path in os.listdir('Raw Data')])
+
 
 ################################################
 ############        Run Models      ############
