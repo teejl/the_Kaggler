@@ -33,18 +33,22 @@ def main():
     print("Splitting Data...")
     X_train, X_test, y_train, y_test = feature_selection(feat, label)
 
-    # Train Model
-    print("Training Model...")
+    # Train Models
+    print("Training Models...")
     dtree = learn_tree(X_train,y_train)
+    KNN = learn_KNN(2,X_train, y_train)
 
-    # Test Model
-    print("Testing Model...")
-    predictions = test_model(dtree, X_test, y_test)
-    plot_test(y_test, predictions)
-
+    for model in [dtree, KNN]:
+        # Test Model
+        print("Testing Models...")
+        print(model)
+        predictions = test_model(model, X_test, y_test)
+        #plot_test(y_test, predictions)
+        
     # Save Model
-    print("Saving Model...")
-    export_model(dtree, 'dtree_stat_win.pk1')
+    print("Saving Models...")
+    export_model(dtree, 'dtree_titanic.pk1')
+    export_model(KNN, 'KNN_titanic.pk1')
 
     # Sign Off
     print("Complete!")
@@ -71,6 +75,12 @@ def learn_tree(X_train,y_train):
     dtree = DecisionTreeClassifier()
     return dtree.fit(X_train,y_train)
 
+def learn_KNN(K, X_train, y_train):
+    # import KNN modeling
+    from sklearn.neighbors import KNeighborsClassifier
+    KNN = KNeighborsClassifier(n_neighbors=K).fit(X_train, y_train)
+    return KNN
+
 def test_model(model, X_test, y_test):
     # import model testing
     from sklearn.metrics import classification_report,confusion_matrix
@@ -92,5 +102,7 @@ def import_model(model, in_path):
 def plot_test(y_test, predictions):
     sns.distplot((y_test-predictions))
     plt.show()
-    
-main()
+
+# RUN CODE HERE
+for i in range(10):
+    main()
